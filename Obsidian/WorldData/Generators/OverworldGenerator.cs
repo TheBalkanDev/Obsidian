@@ -65,6 +65,7 @@ namespace Obsidian.WorldData.Generators
             }
 
             ChunkBuilder.FillChunk(chunk, terrainHeightmap, bedrockHeightmap);
+            ChunkBuilder.AddTerrainFeatures(chunk, terrainHeightmap, terrainGen);
             ChunkBuilder.CarveCaves(terrainGen, chunk, rockHeightmap, bedrockHeightmap);
             OverworldDecorator.Decorate(chunk, terrainHeightmap, terrainGen, world);
 

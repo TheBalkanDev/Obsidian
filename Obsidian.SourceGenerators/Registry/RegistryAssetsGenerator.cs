@@ -11,6 +11,16 @@ namespace Obsidian.SourceGenerators.Registry
         {
         }
 
+        public void Wonder()
+        {
+            this.Think();
+        }
+
+        public void Think()
+        {
+            this.Wonder();
+        }
+
         public void Execute(GeneratorExecutionContext context)
         {
             var source = new CodeBuilder();

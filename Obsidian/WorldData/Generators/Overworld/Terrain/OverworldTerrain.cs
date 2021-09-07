@@ -14,13 +14,15 @@ namespace Obsidian.WorldData.Generators.Overworld.Terrain
 
         public readonly OverworldTerrainSettings settings;
 
-        private readonly BaseTerrain ocean, deepocean, badlands, plains, hills, mountains, rivers;
+        private readonly BaseTerrain ocean, deepocean, badlands, plains, hills, mountains, rivers, forestFeature;
 
         private readonly BaseCarver cave;
 
         private Module FinalBiomes;
 
-        
+        private readonly Dictionary<int, Module> BiomeTerrainFeatures;
+
+
 
         public OverworldTerrain(bool isUnitTest = false)
         {
@@ -33,6 +35,7 @@ namespace Obsidian.WorldData.Generators.Overworld.Terrain
             mountains = new MountainsTerrain();
             rivers = new RiverTerrain();
             cave = new CavesCarver();
+            forestFeature = new ForestFeatureTerrain();
 
             Dictionary<int, Module> biomesMap = new Dictionary<int, Module>()
             {
@@ -106,7 +109,77 @@ namespace Obsidian.WorldData.Generators.Overworld.Terrain
                 { 169, hills.Result },
             };
 
-
+            BiomeTerrainFeatures = new Dictionary<int, Module>()
+            {
+                { 0, new Constant { ConstantValue = 0.0 } },
+                { 1, new Constant { ConstantValue = 0.0 } },
+                { 2, new Constant { ConstantValue = 0.0 } },
+                { 3, new Constant { ConstantValue = 0.0 } },
+                { 4, new Constant { ConstantValue = 0.0 } },
+                { 5, new Constant { ConstantValue = 0.0 } },
+                { 6, new Constant { ConstantValue = 0.0 } },
+                { 7, new Constant { ConstantValue = 0.0 } },
+                { 10, new Constant { ConstantValue = 0.0 } },
+                { 11, new Constant { ConstantValue = 0.0 } },
+                { 12, new Constant { ConstantValue = 0.0 } },
+                { 13, new Constant { ConstantValue = 0.0 } },
+                { 14, new Constant { ConstantValue = 0.0 } },
+                { 15, new Constant { ConstantValue = 0.0 } },
+                { 16, new Constant { ConstantValue = 0.0 } },
+                { 17, new Constant { ConstantValue = 0.0 } },
+                { 18, new Constant { ConstantValue = 0.0 } },
+                { 19, new Constant { ConstantValue = 0.0 } },
+                { 20, new Constant { ConstantValue = 0.0 } },
+                { 21, new Constant { ConstantValue = 0.0 } },
+                { 22, new Constant { ConstantValue = 0.0 } },
+                { 23, new Constant { ConstantValue = 0.0 } },
+                { 24, new Constant { ConstantValue = 0.0 } },
+                { 25, new Constant { ConstantValue = 0.0 } },
+                { 26, new Constant { ConstantValue = 0.0 } },
+                { 27, forestFeature.Result },
+                { 28, new Constant { ConstantValue = 0.0 } },
+                { 29, new Constant { ConstantValue = 0.0 } },
+                { 30, new Constant { ConstantValue = 0.0 } },
+                { 31, new Constant { ConstantValue = 0.0 } },
+                { 32, new Constant { ConstantValue = 0.0 } },
+                { 33, new Constant { ConstantValue = 0.0 } },
+                { 34, new Constant { ConstantValue = 0.0 } },
+                { 35, new Constant { ConstantValue = 0.0 } },
+                { 36, new Constant { ConstantValue = 0.0 } },
+                { 37, new Constant { ConstantValue = 0.0 } },
+                { 38, new Constant { ConstantValue = 0.0 } },
+                { 39, new Constant { ConstantValue = 0.0 } },
+                { 44, new Constant { ConstantValue = 0.0 } },
+                { 45, new Constant { ConstantValue = 0.0 } },
+                { 46, new Constant { ConstantValue = 0.0 } },
+                { 47, new Constant { ConstantValue = 0.0 } },
+                { 48, new Constant { ConstantValue = 0.0 } },
+                { 49, new Constant { ConstantValue = 0.0 } },
+                { 50, new Constant { ConstantValue = 0.0 } },
+                { 129, new Constant { ConstantValue = 0.0 } },
+                { 130, new Constant { ConstantValue = 0.0 } },
+                { 131, new Constant { ConstantValue = 0.0 } },
+                { 132, new Constant { ConstantValue = 0.0 } },
+                { 133, new Constant { ConstantValue = 0.0 } },
+                { 134, new Constant { ConstantValue = 0.0 } },
+                { 140, new Constant { ConstantValue = 0.0 } },
+                { 149, new Constant { ConstantValue = 0.0 } },
+                { 151, new Constant { ConstantValue = 0.0 } },
+                { 155, new Constant { ConstantValue = 0.0 } },
+                { 156, new Constant { ConstantValue = 0.0 } },
+                { 157, new Constant { ConstantValue = 0.0 } },
+                { 158, new Constant { ConstantValue = 0.0 } },
+                { 160, new Constant { ConstantValue = 0.0 } },
+                { 161, new Constant { ConstantValue = 0.0 } },
+                { 162, new Constant { ConstantValue = 0.0 } },
+                { 163, new Constant { ConstantValue = 0.0 } },
+                { 164, new Constant { ConstantValue = 0.0 } },
+                { 165, new Constant { ConstantValue = 0.0 } },
+                { 166, new Constant { ConstantValue = 0.0 } },
+                { 167, new Constant { ConstantValue = 0.0 } },
+                { 168, new Constant { ConstantValue = 0.0 } },
+                { 169, new Constant { ConstantValue = 0.0 } },
+            };
 
             FinalBiomes = VoronoiBiomeNoise.Instance.result;
 
@@ -159,9 +232,14 @@ namespace Obsidian.WorldData.Generators.Overworld.Terrain
             return (BaseBiome)FinalBiomes.GetValue(x, y, z);
         }
 
-        public double GetValue(double x, double z, double y = 0)
+        public double GetValue(double x, double z)
         {
-            return Result.GetValue(x, y, z);
+            return Result.GetValue(x, 0, z);
+        }
+
+        public Module GetFeatureModule(int biome)
+        {
+            return BiomeTerrainFeatures[biome];
         }
 
         public bool IsCave(double x, double y, double z)

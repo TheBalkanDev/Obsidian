@@ -1,7 +1,9 @@
 ﻿using Obsidian.API;
 using Obsidian.Utilities.Registry;
 using Obsidian.WorldData.Generators.Overworld.Terrain;
+using SharpNoise.Modules;
 using System;
+using System.Diagnostics;
 
 namespace Obsidian.WorldData.Generators.Overworld
 {
@@ -23,6 +25,29 @@ namespace Obsidian.WorldData.Generators.Overworld
                             chunk.SetBlock(bx, by, bz, bedrock);
                         }
                         else if (by <= terrainHeightmap[bx, bz]) 
+                        {
+                            chunk.SetBlock(bx, by, bz, stone);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void AddTerrainFeatures(Chunk chunk, double[,] terrainHeightmap, OverworldTerrain t)
+        {
+            var stone = Registry.GetBlock(Material.Stone);
+            for (int x = 0; x < 16; x++)
+            {
+                for (int z = 0; z < 16; z++)
+                {
+                    int ty = (int)terrainHeightmap[x, z];
+                    for (int by = ty; by < ty + 11; by++)
+                    {
+                        int bx = x + chunk.X * 16;
+                        int bz = z + chunk.Z * 16;
+                        int biome = (int)chunk.BiomeContainer.GetBiome(x >> 2, by >> 2, z >> 2);
+                        var noiseVal = t.GetFeatureModule(biome).GetValue(bx, by, bz);
+                        if (noiseVal > 0.9f)
                         {
                             chunk.SetBlock(bx, by, bz, stone);
                         }
